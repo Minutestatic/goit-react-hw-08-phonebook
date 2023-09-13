@@ -4,14 +4,13 @@ import { fetchContacts } from 'redux/operations';
 import ContactForm from 'components/ContactForm';
 import Filter from 'components/Filter';
 import ContactList from 'components/ContactList';
-
+import { selectContacts } from 'redux/selectors';
 import css from './App.module.css';
-import { getContacts } from 'redux/selectors';
 
 const App = () => {
   const dispatch = useDispatch();
 
-  const { isLoading, error } = useSelector(getContacts);
+  const { isLoading, error } = useSelector(selectContacts);
 
   useEffect(() => {
     dispatch(fetchContacts());
