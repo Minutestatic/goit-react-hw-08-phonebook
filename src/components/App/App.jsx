@@ -61,7 +61,7 @@ const App = () => {
 
       <main>
         <Suspense fallback={<Loader />}>
-          <Routes base="/goit-react-hw-08-phonebook/">
+          <Routes basename="/goit-react-hw-08-phonebook/">
             {appRoutes.map(({ path, element }) => (
               <Route key={path} path={path} element={element} />
             ))}
