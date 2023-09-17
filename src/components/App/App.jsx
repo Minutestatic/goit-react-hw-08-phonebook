@@ -34,28 +34,28 @@ const App = () => {
     <>
       <header className={css.container}>
         <nav>
-          <NavLink className={css.link} to={`/${HOME_ROUTE}`}>
-  Home
-</NavLink>
+          <NavLink className={css.link} to={HOME_ROUTE}>
+            Home
+          </NavLink>
 
-{authenticated ? (
-  <>
-    <NavLink className={css.link} to={`/${CONTACTS_ROUTE}`}>
-      Contacts
-    </NavLink>
-    <span>Hello, {userData.name}</span>
-    <button onClick={handleLogOut}>Log Out</button>
-  </>
-) : (
-  <>
-    <NavLink className={css.link} to={`/${LOGIN_ROUTE}`}>
-      Login
-    </NavLink>
-    <NavLink className={css.link} to={`/${REGISTER_ROUTE}`}>
-      Register
-    </NavLink>
-  </>
-)}
+          {authenticated ? (
+            <>
+              <NavLink className={css.link} to={CONTACTS_ROUTE}>
+                Contacts
+              </NavLink>
+              <span>Hello, {userData.name}</span>
+              <button onClick={handleLogOut}>Log Out</button>
+            </>
+          ) : (
+            <>
+              <NavLink className={css.link} to={LOGIN_ROUTE}>
+                Login
+              </NavLink>
+              <NavLink className={css.link} to={REGISTER_ROUTE}>
+                Register
+              </NavLink>
+            </>
+          )}
         </nav>
       </header>
 
