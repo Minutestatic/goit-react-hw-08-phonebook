@@ -4,7 +4,7 @@ import { loginUser } from 'redux/operations';
 import css from './LoginPage.module.css';
 
 const LoginPage = () => {
-  const dispqtch = useDispatch();
+  const dispatch = useDispatch();
 
   const hendleSubmit = event => {
     event.preventDefault();
@@ -16,7 +16,7 @@ const LoginPage = () => {
       email,
       password,
     };
-    dispqtch(loginUser(formData));
+    dispatch(loginUser(formData));
   };
   return (
     <div className={css.container}>
