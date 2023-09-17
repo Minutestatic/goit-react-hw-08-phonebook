@@ -1,10 +1,8 @@
 import { Suspense, lazy, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts } from 'redux/selectors';
 import { NavLink, Route, Routes } from 'react-router-dom';
-import { MutatingDots } from 'react-loader-spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuthentication, selectUserData } from 'redux/selectors';
 
-import { fetchContacts } from 'redux/operations';
 import {
   CONTACTS_ROUTE,
   HOME_ROUTE,
@@ -12,11 +10,8 @@ import {
   REGISTER_ROUTE,
   appRoutes,
 } from 'constants/routes';
-
-import ContactForm from 'components/ContactForm';
-import Filter from 'components/Filter';
-import ContactList from 'components/ContactList';
-
+import { logOutUser, refreshUser } from 'redux/operations';
+import Loader from 'components/Loader';
 import css from './App.module.css';
 
 const NotFoundPage = lazy(() => import('pages/NotFoundPage'));
@@ -24,50 +19,51 @@ const NotFoundPage = lazy(() => import('pages/NotFoundPage'));
 const App = () => {
   const dispatch = useDispatch();
 
-  const { isLoading, error } = useSelector(selectContacts);
+  const authenticated = useSelector(selectAuthentication);
+  const userData = useSelector(selectUserData);
+
+  const handleLogOut = () => {
+    dispatch(logOutUser());
+  };
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(refreshUser());
   }, [dispatch]);
 
   return (
     <>
-      <header>
+      <header className={css.container}>
         <nav>
-          <NavLink to={HOME_ROUTE}>Home</NavLink>
-          <NavLink to={CONTACTS_ROUTE}>Contacts</NavLink>
-          <NavLink to={LOGIN_ROUTE}>Login</NavLink>
-          <NavLink to={REGISTER_ROUTE}>Register</NavLink>
+          <NavLink className={css.link} to={HOME_ROUTE}>
+            Home
+          </NavLink>
+
+          {authenticated ? (
+            <>
+              <NavLink className={css.link} to={CONTACTS_ROUTE}>
+                Contacts
+              </NavLink>
+              <span>Hello, {userData.name}</span>
+              <button onClick={handleLogOut}>Log Out</button>
+            </>
+          ) : (
+            <>
+              <NavLink className={css.link} to={LOGIN_ROUTE}>
+                Login
+              </NavLink>
+              <NavLink className={css.link} to={REGISTER_ROUTE}>
+                Register
+              </NavLink>
+            </>
+          )}
         </nav>
       </header>
 
       <main>
-        <div className={css.container}>
-          <h1 className={css.title}>Phonebook</h1>
-          <ContactForm />
-          <h2 className={css.title}>Contacts</h2>
-          <Filter />
-          {isLoading && !error && <b>Request in progress...</b>}
-          <ContactList />
-        </div>
-        <Suspense
-          fallback={
-            <MutatingDots
-              height="100"
-              width="100"
-              color="#5800a5"
-              secondaryColor="#e08e00"
-              radius="12.5"
-              ariaLabel="mutating-dots-loading"
-              wrapperStyle={{}}
-              wrapperClass=""
-              visible={true}
-            />
-          }
-        >
+        <Suspense fallback={<Loader />}>
           <Routes>
             {appRoutes.map(({ path, element }) => (
-              <Route path={path} element={element} />
+              <Route key={path} path={path} element={element} />
             ))}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

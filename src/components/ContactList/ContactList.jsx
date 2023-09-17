@@ -1,14 +1,26 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { selectContacts, selectFilter } from 'redux/selectors';
-import { deleteContact } from 'redux/operations';
+import {
+  selectContacts,
+  selectContactsError,
+  selectContactsIsLoading,
+  selectFilter,
+} from 'redux/selectors';
+import { deleteContact, requestContacts } from 'redux/operations';
+import { useEffect } from 'react';
+import Loader from 'components/Loader';
 import css from './ContactList.module.css';
 
 const ContactList = () => {
   const dispatch = useDispatch();
 
   const filter = useSelector(selectFilter);
+  const contacts = useSelector(selectContacts);
+  const isLoading = useSelector(selectContactsIsLoading);
+  const error = useSelector(selectContactsError);
 
-  const { contacts, isLoading, error } = useSelector(selectContacts);
+  useEffect(() => {
+    dispatch(requestContacts());
+  }, [dispatch]);
 
   const getFilterContact = () => {
     const normalizedFilter = filter.toLowerCase().trim();
@@ -17,21 +29,23 @@ const ContactList = () => {
     );
   };
 
-  const visibleContacts = getFilterContact();
+  const searchContacts = getFilterContact();
+
+  const visibleContacts = Array.isArray(contacts) && contacts.length > 0;
 
   return (
     <ul className={css['contact-list']}>
-      {isLoading && <p>Loading contacts...</p>}
+      {isLoading && <Loader />}
       {error && <p>{error}</p>}
-      {contacts.length > 0 &&
-        visibleContacts.map(contact => {
+      {visibleContacts &&
+        searchContacts.map(({ name, number, id }) => {
           return (
-            <li className={css['contact-list-item']} key={contact.id}>
-              {contact.name}: {contact.phone}
+            <li className={css['contact-list-item']} key={id}>
+              {name}: {number}
               <div>
                 <button
                   className={css['contact-list-button']}
-                  onClick={() => dispatch(deleteContact(contact.id))}
+                  onClick={() => dispatch(deleteContact(id))}
                 >
                   Delete
                 </button>

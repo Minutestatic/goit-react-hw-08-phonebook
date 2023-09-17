@@ -1,3 +1,5 @@
+import { PrivateRoute } from 'components/PrivateRoute/PrivateRoute';
+import { RestrictedRoute } from 'components/RestrictedRoute/RestrictedRoute';
 import { lazy } from 'react';
 
 const HomePage = lazy(() => import('pages/HomePage'));
@@ -17,15 +19,27 @@ export const appRoutes = [
   },
   {
     path: CONTACTS_ROUTE,
-    element: <ContactsPage />,
+    element: (
+      <PrivateRoute>
+        <ContactsPage />
+      </PrivateRoute>
+    ),
   },
 
   {
     path: LOGIN_ROUTE,
-    element: <LoginPage />,
+    element: (
+      <RestrictedRoute redirectTo={CONTACTS_ROUTE}>
+        <LoginPage />
+      </RestrictedRoute>
+    ),
   },
   {
     path: REGISTER_ROUTE,
-    element: <RegisterPage />,
+    element: (
+      <RestrictedRoute redirectTo={CONTACTS_ROUTE}>
+        <RegisterPage />
+      </RestrictedRoute>
+    ),
   },
 ];
