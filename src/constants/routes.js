@@ -7,7 +7,7 @@ const ContactsPage = lazy(() => import('pages/ContactsPage'));
 const LoginPage = lazy(() => import('pages/LoginPage'));
 const RegisterPage = lazy(() => import('pages/RegisterPage'));
 
-export const HOME_ROUTE = '/goit-react-hw-08-phonebook';
+export const HOME_ROUTE = '/';
 export const CONTACTS_ROUTE = '/contacts';
 export const LOGIN_ROUTE = '/login';
 export const REGISTER_ROUTE = '/register';
